@@ -4,13 +4,10 @@
 
 In our previous Assignment Step 3, we might have used different ways to identify the datatype, but using the **regular expression** we can identify them easily.
 
-**Note : Once you have cloned boilerplate from the given gitlab URL, import the project into eclipse. 
-Your project’s test cases might show compile time errors for methods, as you have not written the complete code.**
-
 ### Expected Output
 Display each column header along with its data type
 
-Ths output of this Assignment step will look like the following
+Output of this Assignment step will look like the following
 
             Enter the file name:
             (Input from the user) data/ipl.csv
