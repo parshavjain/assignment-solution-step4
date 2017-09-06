@@ -35,7 +35,7 @@ Output of this Assignment step will look like the following
 
 The folders and files you see in this repositories, is how it is expected to be in projects, which are submitted for automated evaluation by Hobbes
 
- Project
+   Project
 	|
 	├── data 			                        // If project needs any data file, it can be found here/placed here, if data is huge they can be mounted, no need put it in your repository
 	|
