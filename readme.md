@@ -80,7 +80,7 @@ The folders and files you see in this repositories, is how it is expected to be 
 
 5. Add your new repository reference as remote
 
-     `git remote add origin https://gitlab.training.com/{{yourusername}}/assignment-solution-step4.git`
+     `git remote add origin https://gitlab-wd.stackroute.in/{{yourusername}}/assignment-solution-step4.git`
 
      **Note: {{yourusername}} should be replaced by your username from gitlab**
 
