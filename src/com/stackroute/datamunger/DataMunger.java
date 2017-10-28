@@ -38,6 +38,15 @@ public class DataMunger {
 		 * display the columnName from the header object along with its data type from
 		 * DataTypeDefinitions object
 		 */
+		if(null != header && null != header.getHeaders()
+				 && null != dataTypeDefinitions && null != dataTypeDefinitions.getDataTypes()) {
+			 for (int i = 0; i < header.getHeaders().length && i < dataTypeDefinitions.getDataTypes().length; i++) {
+				String temp = "";
+				temp += header.getHeaders()[i] + " : ";
+				temp += dataTypeDefinitions.getDataTypes()[i];
+				System.out.println(temp);
+			}
+		 }
 
 	}
 
