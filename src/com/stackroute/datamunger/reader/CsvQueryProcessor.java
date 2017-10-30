@@ -46,14 +46,11 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 * perform file reading, hence you need to be ready to handle the IO Exceptions.
 	 */
 	public CsvQueryProcessor(String fileName) throws FileNotFoundException {
-		if (null == fileName || fileName.isEmpty())
-			throw new FileNotFoundException();
-
+	    this.fileName = fileName;
 		File file = new File(fileName);
 		if (!file.exists()) {
 			throw new FileNotFoundException();
 		}
-		this.fileName = fileName;
 	}
 
 	/*
