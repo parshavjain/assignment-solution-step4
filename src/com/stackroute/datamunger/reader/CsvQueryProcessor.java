@@ -18,12 +18,7 @@ import com.stackroute.datamunger.query.Header;
 
 public class CsvQueryProcessor extends QueryProcessingEngine {
 
-	private String fileName;
-	// Regular Expression for determining Integer value.
-	private static final String INT_REGEX = "^[0-9]+$";
-
-	// Regular Expression for determining Float value.
-	private static final String FLOAT_REGEX = "[+-]?([0-9]*[.])[0-9]+";
+	private final String fileName;
 
 	// Regular Expression for determining vaious Date Formats.
 	// checking for date format dd/mm/yyyy
@@ -46,11 +41,12 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 * perform file reading, hence you need to be ready to handle the IO Exceptions.
 	 */
 	public CsvQueryProcessor(String fileName) throws FileNotFoundException {
-	    this.fileName = fileName;
-		File file = new File(fileName);
+		this.fileName = fileName;
+		File file = new File(this.fileName);
 		if (!file.exists()) {
 			throw new FileNotFoundException();
 		}
+		
 	}
 
 	/*
@@ -61,22 +57,22 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	public Header getHeader() throws IOException {
 		// read the first line
 		// populate the header object with the String array containing the header names
-		if (null == fileName || fileName.isEmpty()) {
-			return null;
+		Header header = null;
+		if (null == this.fileName || this.fileName.isEmpty()) {
+			return header;
 		}
-
-		Header header = new Header();
-		Path filePath = FileSystems.getDefault().getPath(fileName);
+		
+		Path filePath = FileSystems.getDefault().getPath(this.fileName);
 		try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
+			header = new Header();
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				header.setHeaders(line.split(","));
-				return header;
 			}
 		} catch (IOException ex) {
 			System.err.format("IOException occured: {}", ex);
 		}
-		return null;
+		return header;
 	}
 
 	/**
@@ -102,22 +98,19 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 */
 	@Override
 	public DataTypeDefinitions getColumnType() throws IOException {
-		if (null == fileName || fileName.isEmpty()) {
-			return null;
+		DataTypeDefinitions dataTypeDefinitions = null;
+		if (null == this.fileName || this.fileName.isEmpty()) {
+			return dataTypeDefinitions;
 		}
 
 		// Getting data from the file.
-		String[] data = getData(fileName);
+		String[] data = getData(this.fileName);
 
-		DataTypeDefinitions dataTypeDefinitions = null;
+		
 		if (null != data) {
 			dataTypeDefinitions = new DataTypeDefinitions();
 			List<String> dataType = new ArrayList<String>();
 			for (String string : data) {
-				if (null == string || string.isEmpty()) {
-					dataType.add(Object.class.toString().split("class ")[1]);
-					continue;
-				}
 				// checking for date format dd/mm/yyyy
 				if (Pattern.matches(DDMMYYYY_REGEX, string) || Pattern.matches(MMDDYYYY_REGEX, string)
 						|| Pattern.matches(DD_MON_YY_REGEX, string) || Pattern.matches(DD_MON_YYYY_REGEX, string)
@@ -164,22 +157,27 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 * @return
 	 */
 	private String determineIntegerFloat(String value) {
-		try {
-			// checking for Integer
-			Integer.parseInt(value);
-			return Integer.class.toString().split("class ")[1];
-		} catch (NumberFormatException ex1) {
+		String dataType = String.class.toString().split("class ")[1];
+		if (null == value || value.isEmpty()) {
+			dataType = Object.class.toString().split("class ")[1];
+		} else {
 			try {
-				// checking for floating point numbers
-				Float.parseFloat(value);
-				return Float.class.toString().split("class ")[1];
-			} catch (Exception e) {
-				//Returning String.
-				return String.class.toString().split("class ")[1];
+				// checking for Integer
+				Integer.parseInt(value);
+				dataType = Integer.class.toString().split("class ")[1];
+			} catch (NumberFormatException ex1) {
+				System.err.format("NumberFormatException occured: {}", ex1);
+				try {
+					// checking for floating point numbers
+					Float.parseFloat(value);
+					dataType = Float.class.toString().split("class ")[1];
+				} catch (NumberFormatException ex2) {
+					System.err.format("NumberFormatException occured: {}", ex2);
+				}
 			}
 		}
+		return dataType;
 	}
-
 }
 
 
