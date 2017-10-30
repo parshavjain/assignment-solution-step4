@@ -82,10 +82,10 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	/**
 	 * This method will be used in the upcoming assignments
 	 */
-	//@Override
-	//public void getDataRow() {
+	@Override
+	public void getDataRow() {
 
-	//}
+	}
 
 	/*
 	 * implementation of getColumnType() method. To find out the data types, we will
