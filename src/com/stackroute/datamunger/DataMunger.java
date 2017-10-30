@@ -39,10 +39,10 @@ public class DataMunger {
 		if(null != header && null != header.getHeaders()
 				 && null != dataTypeDefinitions && null != dataTypeDefinitions.getDataTypes()) {
 			 for (int i = 0; i < header.getHeaders().length && i < dataTypeDefinitions.getDataTypes().length; i++) {
-				String temp = "";
-				temp += header.getHeaders()[i] + " : ";
-				temp += dataTypeDefinitions.getDataTypes()[i];
-				System.out.println(temp);
+			    StringBuffer temp = new StringBuffer(header.getHeaders()[i]);
+				temp.append(":");
+				temp.append(dataTypeDefinitions.getDataTypes()[i]);
+				System.out.println(temp.toString());
 			}
 		 }
 
