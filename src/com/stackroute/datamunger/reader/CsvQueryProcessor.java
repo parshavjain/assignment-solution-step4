@@ -18,7 +18,7 @@ import com.stackroute.datamunger.query.Header;
 
 public class CsvQueryProcessor extends QueryProcessingEngine {
 
-	private final String fileName;
+	private transient final String fileName;
 
 	// Regular Expression for determining vaious Date Formats.
 	// checking for date format dd/mm/yyyy
@@ -32,7 +32,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	// date format dd-month-yy
 	private static final String DD_MONTH_YY_REGEX = "(([12][0-9]|3[01]|0?[1-9])-([a-z])-(?)[0-9]{1}[0-9]{1})";
 	// date format dd-month-yyyy
-	private static final String DD_MONTH_YYYY_REGEX = "(([12][0-9]|3[01]|0?[1-9])-([a-z])-(?:19|20)[0-9]{1}[0-9]{1})";
+	private static final String DD_MONTH_YYYY_REG = "(([12][0-9]|3[01]|0?[1-9])-([a-z])-(?:19|20)[0-9]{1}[0-9]{1})";
 	// date format yyyy-mm-dd
 	private static final String YYYYMMDD_REGEX = "((?:19|20)[0-9]{1}[0-9]{1})-(0?[1-9]|1[012])-([12][0-9]|3[01]|0?[1-9])";
 
@@ -42,11 +42,11 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 */
 	public CsvQueryProcessor(String fileName) throws FileNotFoundException {
 		this.fileName = fileName;
-		File file = new File(this.fileName);
+		final File file = new File(this.fileName);
 		if (!file.exists()) {
 			throw new FileNotFoundException();
 		}
-		
+
 	}
 
 	/*
@@ -61,8 +61,8 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 		if (null == this.fileName || this.fileName.isEmpty()) {
 			return header;
 		}
-		
-		Path filePath = FileSystems.getDefault().getPath(this.fileName);
+
+		final Path filePath = FileSystems.getDefault().getPath(this.fileName);
 		try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
 			header = new Header();
 			String line = null;
@@ -99,32 +99,30 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 */
 	@Override
 	public DataTypeDefinitions getColumnType() throws IOException {
-		DataTypeDefinitions dataTypeDefinitions = null;
-		if (null == this.fileName || this.fileName.isEmpty()) {
-			return dataTypeDefinitions;
-		}
+		DataTypeDefinitions dataTypeDef = null;
+		if (null != this.fileName && !this.fileName.isEmpty()) {
 
-		// Getting data from the file.
-		String[] data = getData(this.fileName);
+			// Getting data from the file.
+			final String[] data = getData(this.fileName);
 
-		
-		if (null != data) {
-			dataTypeDefinitions = new DataTypeDefinitions();
-			List<String> dataType = new ArrayList<String>();
-			for (String string : data) {
-				// checking for date format dd/mm/yyyy
-				if (Pattern.matches(DDMMYYYY_REGEX, string) || Pattern.matches(MMDDYYYY_REGEX, string)
-						|| Pattern.matches(DD_MON_YY_REGEX, string) || Pattern.matches(DD_MON_YYYY_REGEX, string)
-						|| Pattern.matches(DD_MONTH_YY_REGEX, string) || Pattern.matches(DD_MONTH_YYYY_REGEX, string)
-						|| Pattern.matches(YYYYMMDD_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
+			if (null != data) {
+				dataTypeDef = new DataTypeDefinitions();
+				final List<String> dataType = new ArrayList<String>();
+				for (String string : data) {
+					// checking for date format dd/mm/yyyy
+					if (Pattern.matches(DDMMYYYY_REGEX, string) || Pattern.matches(MMDDYYYY_REGEX, string)
+							|| Pattern.matches(DD_MON_YY_REGEX, string) || Pattern.matches(DD_MON_YYYY_REGEX, string)
+							|| Pattern.matches(DD_MONTH_YY_REGEX, string) || Pattern.matches(DD_MONTH_YYYY_REG, string)
+							|| Pattern.matches(YYYYMMDD_REGEX, string)) {
+						dataType.add(Date.class.toString().split("class ")[1]);
+						continue;
+					}
+					dataType.add(this.determineIntegerFloat(string));
 				}
-				dataType.add(this.determineIntegerFloat(string));
+				dataTypeDef.setDataTypes(dataType.toArray(new String[dataType.size()]));
 			}
-			dataTypeDefinitions.setDataTypes(dataType.toArray(new String[dataType.size()]));
 		}
-		return dataTypeDefinitions;
+		return dataTypeDef;
 	}
 
 	/**
@@ -134,7 +132,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 * @return
 	 */
 	private String[] getData(String fileName) throws IOException {
-		Path filePath = FileSystems.getDefault().getPath(fileName);
+		final Path filePath = FileSystems.getDefault().getPath(fileName);
 		String[] data = null;
 		try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
 			String line = null;
@@ -154,6 +152,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 
 	/**
 	 * Method to check for Integer, Float, String.
+	 * 
 	 * @param value
 	 * @return
 	 */
@@ -177,8 +176,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 				}
 			}
 		}
+
 		return dataType;
 	}
 }
-
-

@@ -6,6 +6,9 @@ import com.stackroute.datamunger.query.DataTypeDefinitions;
 import com.stackroute.datamunger.query.Header;
 
 public abstract class QueryProcessingEngine {
+	public QueryProcessingEngine() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public abstract Header getHeader() throws IOException;
 	
