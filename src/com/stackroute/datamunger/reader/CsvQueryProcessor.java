@@ -118,7 +118,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
 				if (count > 0) {
-					data = line.split("\\s+,\\s+", -1);
+					data = line.split(",", -1);
 					break;
 				}
 				count++;
