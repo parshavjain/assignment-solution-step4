@@ -102,12 +102,44 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 */
 	@Override
 	public DataTypeDefinitions getColumnType() throws IOException {
-		// TODO Auto-generated method stub
-
 		if (null == fileName || fileName.isEmpty()) {
 			return null;
 		}
 
+		// Getting data from the file.
+		String[] data = getData(fileName);
+
+		DataTypeDefinitions dataTypeDefinitions = null;
+		if (null != data) {
+			dataTypeDefinitions = new DataTypeDefinitions();
+			List<String> dataType = new ArrayList<String>();
+			for (String string : data) {
+				if (null == string || string.isEmpty()) {
+					dataType.add(Object.class.toString().split("class ")[1]);
+					continue;
+				}
+				// checking for date format dd/mm/yyyy
+				if (Pattern.matches(DDMMYYYY_REGEX, string) || Pattern.matches(MMDDYYYY_REGEX, string)
+						|| Pattern.matches(DD_MON_YY_REGEX, string) || Pattern.matches(DD_MON_YYYY_REGEX, string)
+						|| Pattern.matches(DD_MONTH_YY_REGEX, string) || Pattern.matches(DD_MONTH_YYYY_REGEX, string)
+						|| Pattern.matches(YYYYMMDD_REGEX, string)) {
+					dataType.add(Date.class.toString().split("class ")[1]);
+					continue;
+				}
+				dataType.add(this.determineIntegerFloat(string));
+			}
+			dataTypeDefinitions.setDataTypes(dataType.toArray(new String[dataType.size()]));
+		}
+		return dataTypeDefinitions;
+	}
+
+	/**
+	 * Method to get Data from the file.
+	 * 
+	 * @param filePath
+	 * @return
+	 */
+	private String[] getData(String fileName) throws IOException {
 		Path filePath = FileSystems.getDefault().getPath(fileName);
 		String[] data = null;
 		try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
@@ -123,42 +155,29 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 		} catch (IOException ex) {
 			System.err.format("IOException occured: {}", ex);
 		}
+		return data;
+	}
 
-		DataTypeDefinitions dataTypeDefinitions = null;
-		if (null != data) {
-			dataTypeDefinitions = new DataTypeDefinitions();
-			List<String> dataType = new ArrayList<String>();
-			for (String string : data) {
-				if (null == string || string.isEmpty()) {
-					dataType.add(Object.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for Integer
-				if (Pattern.matches(INT_REGEX, string)) {
-					dataType.add(Integer.class.toString().split("class ")[1]);
-					continue;
-				}
+	/**
+	 * Method to check for Integer, Float, String.
+	 * @param value
+	 * @return
+	 */
+	private String determineIntegerFloat(String value) {
+		try {
+			// checking for Integer
+			Integer.parseInt(value);
+			return Integer.class.toString().split("class ")[1];
+		} catch (NumberFormatException ex1) {
+			try {
 				// checking for floating point numbers
-				if (Pattern.matches(FLOAT_REGEX, string)) {
-					dataType.add(Float.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for date format dd/mm/yyyy
-				if (Pattern.matches(DDMMYYYY_REGEX, string) 
-						|| Pattern.matches(MMDDYYYY_REGEX, string)
-						|| Pattern.matches(DD_MON_YY_REGEX, string)
-						|| Pattern.matches(DD_MON_YYYY_REGEX, string)
-						|| Pattern.matches(DD_MONTH_YY_REGEX, string)
-						|| Pattern.matches(DD_MONTH_YYYY_REGEX, string)
-						|| Pattern.matches(YYYYMMDD_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
-				}
-				dataType.add(String.class.toString().split("class ")[1]);
+				Float.parseFloat(value);
+				return Float.class.toString().split("class ")[1];
+			} catch (Exception e) {
+				//Returning String.
+				return String.class.toString().split("class ")[1];
 			}
-			dataTypeDefinitions.setDataTypes(dataType.toArray(new String[dataType.size()]));
 		}
-		return dataTypeDefinitions;
 	}
 
 }
