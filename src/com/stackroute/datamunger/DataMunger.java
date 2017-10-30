@@ -1,10 +1,8 @@
 package com.stackroute.datamunger;
 
+
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 import com.stackroute.datamunger.query.DataTypeDefinitions;
 import com.stackroute.datamunger.query.Header;
@@ -15,8 +13,8 @@ public class DataMunger {
 	public static void main(String[] args) throws Exception {
 
 		// read the file name from the user
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String fileName = "data/ipl.csv"; // br.readLine();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		String fileName = reader.readLine();
 
 		/*
 		 * create object of CsvQueryProcessor. We are trying to read from a file inside
@@ -51,3 +49,4 @@ public class DataMunger {
 	}
 
 }
+
