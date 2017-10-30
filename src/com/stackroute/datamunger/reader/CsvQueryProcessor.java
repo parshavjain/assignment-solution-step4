@@ -82,10 +82,10 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	/**
 	 * This method will be used in the upcoming assignments
 	 */
-	@Override
-	public void getDataRow() {
+	//@Override
+	//public void getDataRow() {
 
-	}
+	//}
 
 	/*
 	 * implementation of getColumnType() method. To find out the data types, we will
@@ -144,37 +144,13 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 					continue;
 				}
 				// checking for date format dd/mm/yyyy
-				if (Pattern.matches(DDMMYYYY_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for date format mm/dd/yyyy
-				if (Pattern.matches(MMDDYYYY_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for date format dd-mon-yy
-				if (Pattern.matches(DD_MON_YY_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for date format dd-mon-yyyy
-				if (Pattern.matches(DD_MON_YYYY_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for date format dd-month-yy
-				if (Pattern.matches(DD_MONTH_YY_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for date format dd-month-yyyy
-				if (Pattern.matches(DD_MONTH_YYYY_REGEX, string)) {
-					dataType.add(Date.class.toString().split("class ")[1]);
-					continue;
-				}
-				// checking for date format yyyy-mm-dd
-				if (Pattern.matches(YYYYMMDD_REGEX, string)) {
+				if (Pattern.matches(ddmmyyyy_REGEX, string) 
+						|| Pattern.matches(mmddyyyy_REGEX, string)
+						|| Pattern.matches(dd_mon_yy_REGEX, string)
+						|| Pattern.matches(dd_mon_yyyy_REGEX, string)
+						|| Pattern.matches(dd_month_yy_REGEX, string)
+						|| Pattern.matches(dd_month_yyyy_REGEX, string)
+						|| Pattern.matches(yyyymmdd_REGEX, string)) {
 					dataType.add(Date.class.toString().split("class ")[1]);
 					continue;
 				}
