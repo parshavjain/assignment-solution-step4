@@ -68,6 +68,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				header.setHeaders(line.split(","));
+				break;
 			}
 		} catch (IOException ex) {
 			System.err.format("IOException occured: {}", ex);
