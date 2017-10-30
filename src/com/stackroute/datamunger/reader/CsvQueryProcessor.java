@@ -144,13 +144,13 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 					continue;
 				}
 				// checking for date format dd/mm/yyyy
-				if (Pattern.matches(ddmmyyyy_REGEX, string) 
-						|| Pattern.matches(mmddyyyy_REGEX, string)
-						|| Pattern.matches(dd_mon_yy_REGEX, string)
-						|| Pattern.matches(dd_mon_yyyy_REGEX, string)
-						|| Pattern.matches(dd_month_yy_REGEX, string)
-						|| Pattern.matches(dd_month_yyyy_REGEX, string)
-						|| Pattern.matches(yyyymmdd_REGEX, string)) {
+				if (Pattern.matches(DDMMYYYY_REGEX, string) 
+						|| Pattern.matches(MMDDYYYY_REGEX, string)
+						|| Pattern.matches(DD_MON_YY_REGEX, string)
+						|| Pattern.matches(DD_MON_YYYY_REGEX, string)
+						|| Pattern.matches(DD_MONTH_YY_REGEX, string)
+						|| Pattern.matches(DD_MONTH_YYYY_REGEX, string)
+						|| Pattern.matches(YYYYMMDD_REGEX, string)) {
 					dataType.add(Date.class.toString().split("class ")[1]);
 					continue;
 				}
