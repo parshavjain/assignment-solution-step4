@@ -9,11 +9,8 @@ import com.stackroute.datamunger.query.Header;
 import com.stackroute.datamunger.reader.CsvQueryProcessor;
 
 public class DataMunger {
-	private DataMunger() {
-		
-	}
 
-	public static void main(String... args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		// read the file name from the user
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -45,7 +42,6 @@ public class DataMunger {
 			 for (int i = 0; i < header.getHeaders().length && i < dataTypeDef.getDataTypes().length; i++) {
 			    temp = new StringBuffer(header.getHeaders()[i] + ":");
 				temp.append(dataTypeDef.getDataTypes()[i]);
-				System.out.println(temp.toString());
 			}
 		 }
 

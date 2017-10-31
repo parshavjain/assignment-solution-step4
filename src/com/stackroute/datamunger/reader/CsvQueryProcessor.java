@@ -66,9 +66,12 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 		try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
 			header = new Header();
 			String line = null;
+			int count = 0;
 			while ((line = reader.readLine()) != null) {
-				header.setHeaders(line.split(","));
-				break;
+				count++;
+				if(count > 1) {
+					header.setHeaders(line.split(","));
+				}				
 			}
 		} catch (IOException ex) {
 			System.err.format("IOException occured: {}", ex);
