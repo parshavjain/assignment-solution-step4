@@ -69,7 +69,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 			int count = 0;
 			while ((line = reader.readLine()) != null) {
 				count++;
-				if(count > 1) {
+				if(count == 1) {
 					header.setHeaders(line.split(","));
 				}				
 			}
