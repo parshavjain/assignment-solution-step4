@@ -1,22 +1,29 @@
 package com.stackroute.datamunger.query;
 
-//header class
+/**
+ * header class
+ */
 public class Header {
-	public Header() {
-		// TODO Auto-generated constructor stub
-	}
-
-	/*
+	
+	/**
 	 * this class should contain a member variable which is a String array, to hold
 	 * the headers.
 	 */
 	private String[] headers;
+	
+	/**
+	 * 
+	 * @param headers
+	 */
+	public Header(final String... headers) {
+		this.headers = headers;
+	}
 
 	/**
 	 * @param headers
 	 *            the headers to set
 	 */
-	public void setHeaders(String... headers) {
+	public void setHeaders(final String... headers) {
 		this.headers = headers;
 	}
 
@@ -24,6 +31,6 @@ public class Header {
 	 * @return headers the headers to get
 	 */
 	public String[] getHeaders() {
-		return this.headers;
+		return this.headers.clone();
 	}
 }
