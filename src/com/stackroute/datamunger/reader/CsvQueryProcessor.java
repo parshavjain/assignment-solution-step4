@@ -178,10 +178,10 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 * @param value
 	 * @return
 	 */
-	public String getDataType(final String input) {
+	private String getDataType(final String input) {
 		String returnString = Object.class.toString();
 		if (null != input && !input.isEmpty()) {
-			returnString = null;
+			returnString = "";
 			// checking for Integer
 			if (Pattern.matches(INT_REGEX, input)) {
 				// System.out.println("matched Integer");
@@ -192,45 +192,34 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 				// System.out.println("matched float");
 				returnString = Float.class.toString();
 			}
-			// checking for date format dd/mm/yyyy
-			if (Pattern.matches(DDMMYYYY_REGEX, input)) {
-				// System.out.println("matched date");
-				returnString = Date.class.toString();
+			
+			if(returnString.isEmpty()) {
+				returnString = getDateDataType(input);
 			}
-			// checking for date format mm/dd/yyyy
-			if (Pattern.matches(MMDDYYYY_REGEX, input)) {
-				// System.out.println("matched date");
-				returnString = Date.class.toString();
-			}
-			// checking for date format dd-mon-yy
-			if (Pattern.matches(DD_MON_YY_REGEX, input)) {
-				// System.out.println("matched date");
-				returnString = Date.class.toString();
-			}
-			// checking for date format dd-mon-yyyy
-			if (Pattern.matches(DD_MON_YYYY_REGEX, input)) {
-				// System.out.println("matched date");
-				returnString = Date.class.toString();
-			}
-			// checking for date format dd-month-yy
-			if (Pattern.matches(DD_MONTH_YY_REGEX, input)) {
-				// System.out.println("matched date");
-				returnString = Date.class.toString();
-			}
-			// checking for date format dd-month-yyyy
-			if (Pattern.matches(DD_MONTH_YYYY_REG, input)) {
-				// System.out.println("matched date");
-				returnString = Date.class.toString();
-			}
-			// checking for date format yyyy-mm-dd
-			if (Pattern.matches(YYYYMMDD_REGEX, input)) {
-				// System.out.println("matched date");
-				returnString = Date.class.toString();
-			}
+			
 			// System.out.println("matched String");
-			if(null == returnString) {
+			if(returnString.isEmpty()) {
 				returnString = String.class.toString();
 			}
+		}
+		return returnString;
+	}
+
+	/**
+	 * Method to check for Date.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private String getDateDataType(final String input) {	
+		String returnString = "";
+		// checking for date format dd/mm/yyyy
+		if (Pattern.matches(DDMMYYYY_REGEX, input) || Pattern.matches(MMDDYYYY_REGEX, input)
+				|| Pattern.matches(DD_MON_YY_REGEX, input)|| Pattern.matches(DD_MON_YYYY_REGEX, input)
+				|| Pattern.matches(DD_MONTH_YY_REGEX, input) || Pattern.matches(DD_MONTH_YYYY_REG, input)
+				|| Pattern.matches(YYYYMMDD_REGEX, input)) {
+			// System.out.println("matched date");
+			returnString = Date.class.toString();
 		}
 		return returnString;
 	}
