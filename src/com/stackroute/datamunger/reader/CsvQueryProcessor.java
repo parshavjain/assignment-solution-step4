@@ -94,23 +94,21 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 		// read the first line
 		// populate the header object with the String array containing the header names
 		Header header = null;
-		if (null == this.fileName || this.fileName.isEmpty()) {
-			return header;
-		}
-
-		final Path filePath = FileSystems.getDefault().getPath(this.fileName);
-		try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
-
-			String line = null;
-			int count = 0;
-			while ((line = reader.readLine()) != null) {
-				count++;
-				if (count == 1) {
-					header = new Header(line.split(","));
+		if (null != this.fileName && !this.fileName.isEmpty()) {
+			final Path filePath = FileSystems.getDefault().getPath(this.fileName);
+			try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
+				String line = null;
+				boolean flag = true;
+				while ((line = reader.readLine()) != null) {
+					if(flag) {
+						header = new Header(line.split(","));
+						flag = false;
+						break;
+					}
 				}
+			} catch (IOException ex) {
+				System.err.format("IOException occured: {}", ex);
 			}
-		} catch (IOException ex) {
-			System.err.format("IOException occured: {}", ex);
 		}
 		return header;
 	}
@@ -124,7 +122,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	}
 
 	/**
-	 * implementation of getColumnType() method. 
+	 * implementation of getColumnType() method.
 	 */
 	@Override
 	public DataTypeDefinitions getColumnType() throws IOException {
@@ -139,7 +137,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 				final List<String> dataType = new ArrayList<String>();
 				String dataTypeString = null;
 				for (final String string : data) {
-					dataTypeString = this.getDataType(string).toString();
+					dataTypeString = this.getDataType(string);
 					dataTypeString = dataTypeString.split("class ")[1];
 					dataType.add(dataTypeString);
 				}
@@ -155,7 +153,7 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 * @param filePath
 	 * @return
 	 */
-	private String[] getData(String fileName) throws IOException {
+	private String[] getData(final String fileName) throws IOException {
 		final Path filePath = FileSystems.getDefault().getPath(fileName);
 		String[] data = null;
 		try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
@@ -180,58 +178,60 @@ public class CsvQueryProcessor extends QueryProcessingEngine {
 	 * @param value
 	 * @return
 	 */
-	public Object getDataType(final String input) {
-		if (null == input || input.isEmpty()) {
-			// System.out.println("matched Object");
-			return Object.class;
+	public String getDataType(final String input) {
+		String returnString = Object.class.toString();
+		if (null != input && !input.isEmpty()) {
+			returnString = null;
+			// checking for Integer
+			if (Pattern.matches(INT_REGEX, input)) {
+				// System.out.println("matched Integer");
+				returnString = Integer.class.toString();
+			}
+			// checking for floating point numbers
+			if (Pattern.matches(FLOAT_REGEX, input)) {
+				// System.out.println("matched float");
+				returnString = Float.class.toString();
+			}
+			// checking for date format dd/mm/yyyy
+			if (Pattern.matches(DDMMYYYY_REGEX, input)) {
+				// System.out.println("matched date");
+				returnString = Date.class.toString();
+			}
+			// checking for date format mm/dd/yyyy
+			if (Pattern.matches(MMDDYYYY_REGEX, input)) {
+				// System.out.println("matched date");
+				returnString = Date.class.toString();
+			}
+			// checking for date format dd-mon-yy
+			if (Pattern.matches(DD_MON_YY_REGEX, input)) {
+				// System.out.println("matched date");
+				returnString = Date.class.toString();
+			}
+			// checking for date format dd-mon-yyyy
+			if (Pattern.matches(DD_MON_YYYY_REGEX, input)) {
+				// System.out.println("matched date");
+				returnString = Date.class.toString();
+			}
+			// checking for date format dd-month-yy
+			if (Pattern.matches(DD_MONTH_YY_REGEX, input)) {
+				// System.out.println("matched date");
+				returnString = Date.class.toString();
+			}
+			// checking for date format dd-month-yyyy
+			if (Pattern.matches(DD_MONTH_YYYY_REG, input)) {
+				// System.out.println("matched date");
+				returnString = Date.class.toString();
+			}
+			// checking for date format yyyy-mm-dd
+			if (Pattern.matches(YYYYMMDD_REGEX, input)) {
+				// System.out.println("matched date");
+				returnString = Date.class.toString();
+			}
+			// System.out.println("matched String");
+			if(null == returnString) {
+				returnString = String.class.toString();
+			}
 		}
-		// checking for Integer
-		if (Pattern.matches(INT_REGEX, input)) {
-
-			// System.out.println("matched Integer");
-			return Integer.class;
-		}
-		// checking for floating point numbers
-		if (Pattern.matches(FLOAT_REGEX, input)) {
-			// System.out.println("matched float");
-			return Float.class;
-		}
-		// checking for date format dd/mm/yyyy
-		if (Pattern.matches(DDMMYYYY_REGEX, input)) {
-			// System.out.println("matched date");
-			return Date.class;
-		}
-		// checking for date format mm/dd/yyyy
-		if (Pattern.matches(MMDDYYYY_REGEX, input)) {
-			// System.out.println("matched date");
-			return Date.class;
-		}
-		// checking for date format dd-mon-yy
-		if (Pattern.matches(DD_MON_YY_REGEX, input)) {
-			// System.out.println("matched date");
-			return Date.class;
-		}
-		// checking for date format dd-mon-yyyy
-		if (Pattern.matches(DD_MON_YYYY_REGEX, input)) {
-			// System.out.println("matched date");
-			return Date.class;
-		}
-		// checking for date format dd-month-yy
-		if (Pattern.matches(DD_MONTH_YY_REGEX, input)) {
-			// System.out.println("matched date");
-			return Date.class;
-		}
-		// checking for date format dd-month-yyyy
-		if (Pattern.matches(DD_MONTH_YYYY_REG, input)) {
-			// System.out.println("matched date");
-			return Date.class;
-		}
-		// checking for date format yyyy-mm-dd
-		if (Pattern.matches(YYYYMMDD_REGEX, input)) {
-			// System.out.println("matched date");
-			return Date.class;
-		}
-		// System.out.println("matched String");
-		return String.class;
+		return returnString;
 	}
 }
